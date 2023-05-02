@@ -5,9 +5,7 @@ status: "Draft" # One of Draft, Accepted, Rejected
 authors:
   - "" # One item for each author, as github id or "firstname lastname"
 tags:
-  - "" # e.g. kafka, connectors, registry
-applies_padrs: # What PADRs does this ADR apply?
-applies_patterns: # What APs does this ADR apply?
+  - "" # e.g. service, python, java, etc
 ---
 
     So assume your reader is not an expert in the problem.
