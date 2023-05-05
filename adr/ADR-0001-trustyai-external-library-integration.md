@@ -113,4 +113,4 @@ N/A
 
 ### Consequences if not completed
 
-TBD
+It is not going to be possible to provide non-Java hardcoded (aka included in TrustyAI source code) algorithms implementation
