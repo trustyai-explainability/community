@@ -75,6 +75,7 @@ This proposal is based on [KServe’s approach to model explainability](https://
 **Pros:**
 
 * Extensible for any external service that implements the API
+* Solve the integration issue for any possible language and not Java/Python only 
 
 **Cons:**
 
