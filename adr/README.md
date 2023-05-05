@@ -10,6 +10,8 @@
 
 # Current ADRs
 
-[List of ADRs currently in discussion](https://github.com/trustyai-explainability/community/pulls?q=is%3Apr+is%3Aopen+label%3AADR).
+[List of ADRs currently in discussion](https://github.com/trustyai-explainability/community/pulls?q=is%3Aopen+is%3Apr+label%3AADR%2Funder-discussion).
 
 # Approved ADRs
+
+* [ADR-0001: TrustyAI external library integration](adr/ADR-0001-trustyai-external-library-integration.md)
