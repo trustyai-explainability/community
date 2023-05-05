@@ -49,8 +49,9 @@ jep provides specific optimizations for the serialization/deserialization of num
 **Cons:**
 
 * Increase complexity of TrustyAI service (dependency tracking and updating)
-* Adding new algorithms requires hardcoding
-* Reduced flexibility (third party libraries need to be added directly)
+* Complexity to "assemble"/compose the image of the service
+  * Even if no composition is done, there are still issues of hardcoding the algorithms and
+  * Reduced flexibility (third party libraries need to be added directly)
 
 ### Proposal 2 - Container/Microservice composition: Sidecar container
 
