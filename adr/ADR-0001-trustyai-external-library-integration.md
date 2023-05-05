@@ -82,6 +82,7 @@ This proposal is based on [KServe’s approach to model explainability](https://
 * Limitations of passing large amount of data through the gRPC channel
 * Communication API should accommodate different explainer/metric APIs
 * Write gRPC client/service protobuf
+* Possible performance bottleneck (because of networking and serialisation/deserialisation)
 
 ## Alternatives Considered / Rejected
 
