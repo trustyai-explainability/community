@@ -12,6 +12,7 @@ To overcome this limitation we also need to consider that many AI algorithms are
 * Ability to extend TrustyAI with third-party libraries for explainability and fairness/bias metrics
 * Minimal impact on the current TrustyAI service external API
 * Must conform to Open Data Hub general architecture
+* Allow the integration with non-Java libraries, in particular Python libraries
 
 ## Non-goals
 
