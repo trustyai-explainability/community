@@ -14,4 +14,4 @@
 
 # Approved ADRs
 
-* [ADR-0001: TrustyAI external library integration](adr/ADR-0001-trustyai-external-library-integration.md)
+* [ADR-0001: TrustyAI external library integration](ADR-0001-trustyai-external-library-integration.md)
