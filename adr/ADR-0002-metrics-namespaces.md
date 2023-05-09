@@ -17,6 +17,7 @@ tags:
 Currently, the metrics namespace in `explainability-core` consist of a single package (`org.kie.trustyai.explainability.metrics`) with a single class (`FairnessMetrics`).
 As more metrics will be added in the future, it is important to have a clear structure for the metrics namespace. The namespace should be easy to navigate and understand and reflect a general taxonomy of fairness metrics.
 This will also allow extracting common functionality into abstract classes, and make it easier to add new metrics.
+Additional metrics may also be provided by third-party libraries, and it is important to have a clear separation between the metrics provided by `explainability-core` and those provided by third-party libraries, as well as accomodating potential name clashes and conflicts.
 
 ## Goals
 
@@ -54,9 +55,20 @@ The proposed metrics namespace is as follows:
     ├── utility
     │   ├── fairness_through_awareness
     │   └── ...
-    └── composite
-        └── ...
+    ├── composite
+    │   └── ...
+    └── external
+        ├── provider1
+        │   ├── algorithm1
+        │   └── algorithm2
+        ├── provider2
+        │   ├── algorithm1
+        │   └── algorithm2
+        └── provider3
+            ├── algorithm1
+            └── algorithm2
 
+Externally provided metrics can have their Java entry point in the `external` package, and the actual implementation in a sub-package. Separating by provider will allow for name clashes and conflicts to be resolved.
 
 
 ### Threat model
