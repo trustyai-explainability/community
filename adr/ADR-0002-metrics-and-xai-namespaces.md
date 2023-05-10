@@ -56,30 +56,45 @@ The proposed metrics namespace is as follows:
     │   ├── local
     │   │   ├── LIME
     │   │   └── ...
-    │   └── *external*
-    │       └── ...    
+    │   └── external
+    │       └── ...
     └── metrics
-        ├── group
-        │   ├── statistical_parity
-        │   ├── disparate_impact
-        │   ├── equalized_odds
-        │   ├── equal_opportunity
-        │   └── conditional_demographic_disparity
-        ├── individual
-        │   ├── consistency
+        ├── accuracy
         │   └── ...
-        ├── overall
-        │   ├── gini_index
+        ├── robustness
         │   └── ...
-        ├── ranking
-        │   ├── kendall_tau_distance
+        ├── explainability
         │   └── ...
-        ├── utility
-        │   ├── fairness_through_awareness
+        ├── fairness
+        │   ├── group
+        │   │   ├── statistical_parity
+        │   │   ├── disparate_impact
+        │   │   ├── equalized_odds
+        │   │   ├── equal_opportunity
+        │   │   └── conditional_demographic_disparity
+        │   ├── individual
+        │   │   ├── consistency
+        │   │   └── ...
+        │   ├── overall
+        │   │   ├── gini_index
+        │   │   └── ...
+        │   ├── ranking
+        │   │   ├── kendall_tau_distance
+        │   │   └── ...
+        │   └── utility
+        │       ├── fairness_through_awareness
+        │       └── ...
+        ├── efficiency
+        │   └── ...
+        ├── scalability
+        │   └── ...
+        ├── generalization
+        │   └── ...
+        ├── interpretability
         │   └── ...
         ├── composite
         │   └── ...
-        └── *external*
+        └── external
             ├── provider1
             │   ├── algorithm1
             │   └── algorithm2
@@ -89,6 +104,7 @@ The proposed metrics namespace is as follows:
             └── provider3
                 ├── algorithm1
                 └── algorithm2
+
 
 `metrics` would become a sibling namespace to `explainability`.
 
