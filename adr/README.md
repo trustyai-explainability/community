@@ -14,4 +14,4 @@
 
 # Approved ADRs
 
-- [ADR-0002: Metrics namespaces](ADR-0002-metrics-namespaces.md)
+- [ADR-0002: Metrics namespaces](ADR-0002-metrics-and-xai-namespaces.md)
