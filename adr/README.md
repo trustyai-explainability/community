@@ -13,3 +13,5 @@
 [List of ADRs currently in discussion](https://github.com/trustyai-explainability/community/pulls?q=is%3Apr+is%3Aopen+label%3AADR).
 
 # Approved ADRs
+
+- [ADR-0002: Metrics namespaces](ADR-0002-metrics-and-xai-namespaces.md)
