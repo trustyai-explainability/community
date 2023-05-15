@@ -26,7 +26,7 @@ At the moment there is no out of the box solution for TrustyAI to leverage the e
 
 ## Proposal
 
-### Proposal 1 - Embedding: Java -> Python bridge
+### Embedding: Java -> Python bridge
 
 [jep](https://github.com/ninia/jep) is a Java library that allows embedding Python code in Java applications.
 For this proposal:
@@ -53,7 +53,9 @@ jep provides specific optimizations for the serialization/deserialization of num
   * Even if no composition is done, there are still issues of hardcoding the algorithms and
   * Reduced flexibility (third party libraries need to be added directly)
 
-### Proposal 2 - Container/Microservice composition: Sidecar container
+## Alternatives Considered / Rejected
+
+### Container/Microservice composition: Sidecar container
 
 This proposal is based on [KServe’s approach to model explainability](https://kserve.github.io/website/0.8/modelserving/explainer/explainer/#inferenceservice-explainer). We assume the case of Python external libraries which need to be used as the algorithmic backend for the TrustyAI service.
 
@@ -86,33 +88,28 @@ This proposal is based on [KServe’s approach to model explainability](https://
   * Each library should implement the integration code between their native API and the TrustyAI wrapper
 * Possible performance bottleneck (because of networking and serialisation/deserialisation)
 
-## Alternatives Considered / Rejected
-
-N/A
-
-## Challenges
-
-### Proposal 1
-
-* Establish general API for explainers and metrics
-
-### Proposal 2
+### Challenges
 
 * Establish general API for explainers and metrics (gRPC)
 * Data transfer limitations
 * Deployment of side-container
 
-## Dependencies
+### Dependencies
 
-### Proposal 1
+* None (gRPC client already included in TrustyAI service dependencies)
+
+> This proposal will not be considered for the time being, but will be kept in mind for future integrations, especially when the need to open the TrustyAI service to other languages arises.
+
+## Challenges
+
+* Establish general API for explainers and metrics
+
+## Dependencies
 
 * Jep library (and associated jep JNI native library)
 * Python in container image
 * External Python libraries in container image
 
-### Proposal 2
-
-* None (gRPC client already included in TrustyAI service dependencies)
 
 ### Consequences if not completed
 
