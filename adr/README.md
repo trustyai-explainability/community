@@ -16,4 +16,4 @@
 
 * [ADR-0001: TrustyAI external library integration](ADR-0001-trustyai-external-library-integration.md)
 * [ADR-0002: Metrics and XAI namespaces](ADR-0002-metrics-and-xai-namespaces.md)
-* [ADR-0003: TrustyAI Service Deployment using Operator](ADR-0003-trustyai-service-deployment-using-operator.md)
+* [ADR-0003: TrustyAI Service Deployment using Operator pattern](ADR-0003-trustyai-service-deployment-using-operator-pattern.md)
