@@ -118,7 +118,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: model-serving-config
-  namespace: default
 data:
   config.yaml: |
     payloadProcessors: http://trustyai-service.$NAMESPACE/consumer/kserve/v2
@@ -176,7 +175,6 @@ apiVersion: trustyai.opendatahub.io/v1
 kind: TrustyAIService
 metadata:
   name: trustyai-service-example
-  namespace: default
 spec:
   ...
   serviceMonitoring:
