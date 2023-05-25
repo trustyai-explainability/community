@@ -236,10 +236,8 @@ Regarding the Operator's distribution, OperatorHub is out of scope for now, but 
 
 ## Dependencies
 
-* Operator Lifecycle Manager (OLM) for installing and managing the Operator.
+None
 
 ## Consequences if not completed
 
 If not completed, we will continue with the manual deployment and management of the TrustyAI service which would make it harder to scale and update the service.
-
-
