@@ -59,6 +59,8 @@ spec:
   storage:
     format: "PVC"
     folder: "/inputs"
+    pv: "mypv"
+    size: "1Gi"
   data:
     filename: "data.csv"
     format: "CSV"
@@ -89,6 +91,8 @@ In this example:
 * `storage` is a mandatory field that specifies the storage details. It has two nested fields:
   * `format` - the storage format, (example: a Persistent Volume Claim (PVC)).
   * `folder` - the folder path where data is stored.
+  * `pv` - the name of the Persistent Volume (PV) to use (already existing).
+  * `size` - the size of the PV to use (example: 1Gi).
 * data is a mandatory field that specifies the data details. It has two nested fields:
   * `filename` - the suffix of the file that the service uses for data.
   * `format` - the format of the data file (example:  a CSV file).
@@ -214,12 +218,34 @@ spec:
 
 Note that TrustyAI isn't currently implementing HTTPS endpoints, so the `tls` field will be set to `null` for now. Once HTTPS is implemented, the `tls` field will be updated to include the TLS configuration.
 
+### Storage
+
+The TrustyAI service requires storage to store inference data. Upon CR deployment, the operator will create a `PersistentVolumeClaim` object to request storage for the TrustyAI Service. The `PersistentVolumeClaim` object will have the following configuration:
+
+```yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: trustyai-service-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: ""
+```
+
+and bind it to the TrustyAI Service deployment and supplied PV.
+The PVC will be created in the same namespace as the TrustyAI Service is being deployed.
+
 ### Testing
 
 The testing and CI of the TrustyAI Operator will be performed using the following approaches:
 
 * Unit tests for the Operator code, to ensure that the Operator's functionality is correct.
-* Integration tests using [Kuttl](https://kuttl.dev/) to ensure that the Operator is correctly deployed and configured. The Kuttl tests will, for instance, ensure that:
+* Integration tests using [envtest](https://book.kubebuilder.io/reference/envtest.html) to ensure that the Operator is correctly deployed and configured. The Kuttl tests will, for instance, ensure that:
   * The state is correctly updated when the Custom Resource is updated.
   * Routes and ServiceMonitors are correctly created.
   * ModelMesh Payload Processors are correctly configured.
