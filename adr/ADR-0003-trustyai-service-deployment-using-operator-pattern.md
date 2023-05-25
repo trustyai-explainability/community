@@ -28,7 +28,8 @@ In addition to this, the deployment and the storage (PVC for now) must be create
 
 ## Non-goals
 
-Implementing mechanisms that perform actions unrelated with the lifecycle of the TrustyAI service (create, upgrade, monitor, etc)..
+* Implementing mechanisms that perform actions unrelated with the lifecycle of the TrustyAI service (create, upgrade, monitor, etc)..
+* In the initial stage, distribution via OperatorHub is not a goal. This may be considered in the future.
 
 ## Current situation
 
