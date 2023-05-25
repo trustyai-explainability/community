@@ -120,7 +120,7 @@ metadata:
   name: model-serving-config
 data:
   config.yaml: |
-    payloadProcessors: http://trustyai-service.$NAMESPACE/consumer/kserve/v2
+    payloadProcessors: http://trustyai-service.$NAMESPACE.svc.cluster.local/consumer/kserve/v2
 ```
 
 In this configuration, `$NAMESPACE` is replaced by the Operator with the namespace where the TrustyAI Service and ModelMesh Serving are deployed ensuring that ModelMesh sends payloads correctly to the TrustyAI Service.
