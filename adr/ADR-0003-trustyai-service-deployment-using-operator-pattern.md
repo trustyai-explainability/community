@@ -225,8 +225,6 @@ The testing and CI of the TrustyAI Operator will be performed using the followin
   * ModelMesh Payload Processors are correctly configured.
 * End-to-End (E2E) tests, by integrating with the work already being implemented with the [TrustyAI E2E tests](https://github.com/trustyai-explainability/trustyai-explainability/tree/main/e2e_tests)
 
-Regarding the Operator's distribution, OperatorHub is out of scope for now, but it could be considered in the future.
-
 ## Threat Model
 
 * No other threats additionally to the ones common to any operators themselves, which include misconfiguration of the operator, security vulnerabilities in the operator code or in the created resources.
