@@ -238,6 +238,27 @@ spec:
 and bind it to the TrustyAI Service deployment and supplied PV.
 The PVC will be created in the same namespace as the TrustyAI Service is being deployed.
 
+### Custom Image Configuration using ConfigMap
+
+If a custom image is required for the TrustyAI service (_e.g._ for development or testing), you can configure the operator to use custom images by creating a `ConfigMap` in the operator's namespace.
+The operator only checks the `ConfigMap` at deployment, so changes made afterward won't trigger a redeployment of services.
+
+An example of a ConfigMap that specifies a custom image:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trustyai-service-operator-config
+data:
+  trustyaiServiceImageName: 'quay.io/mycustomrepo/mycustomimage'
+  trustyaiServiceImageTag: 'v1.0.0'
+```
+
+After the ConfigMap is applied, the operator will use the image name and tag specified in the `ConfigMap` for the CR deployment.
+
+Since this functionality is mainly for development and testing, if you want to use a different image or tag after deployment, you'll need to update the `ConfigMap` and redeploy the operator to have the changes take effect. The running TrustyAI services won't be redeployed automatically. To use the new image or tag, you'll need to delete and recreate the TrustyAIService resources.
+
 ### Testing
 
 The testing and CI of the TrustyAI Operator will be performed using the following approaches:
