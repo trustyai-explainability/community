@@ -169,12 +169,22 @@ The HTTP POST payload will be:
 
 ```java
 public class TimeSeriesRequest {
-    private String modelId;
+    @JsonProperty("model")
+    private ModelConfig modelConfig;
     private Optional<List<Date>> timestamp; // optional field
     private Map<String, List<Double>> inputs;
     private Map<String, List<Double>> outputs;
 }
 ```
+
+where `ModelConfig` is a class that contains the model information (model name, model identifier, etc.) including model `target` which should be in the form `<host>:<port>` and refer to an existing KServe API endpoint supporting gRPC (*e.g.* `example.com:8081` or `0.0.0.0:8081`).
+
+```java
+public class ModelConfig {
+    private String target;
+    private String name;
+    private String version;
+}
 
 The timestamp field is optional. When not present, we assume the data points are not timestamped and that the data points in the inputs and outputs maps are sequential in the time-series (with no specific time information).
 
@@ -219,7 +229,11 @@ The corresponding JSON payload for the `TimeSeriesRequest` would be:
 
 ```json
 {
-  "modelId": "model123",
+    "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "predictionId": "prediction123",
   "timestamp": [
     "2023-01-01T00:00:00Z",
@@ -269,7 +283,11 @@ And the corresponding JSON payload for the `TimeSeriesRequest` would be:
 
 ```json
 {
-  "modelId": "model123",
+  "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "predictionId": "prediction123",
   "inputs": {
     "f1": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
@@ -318,13 +336,17 @@ public interface DataParser {
 
 #### JSON Examples
 
-In these examples, we'll consider that payloads include `modelId`, `timestamp` or `predictionId` as necessary.
+In these examples, we'll consider that payloads include `model`, `timestamp` or `predictionId` as necessary.
 
 **Example 1:** A payload for reading time-series data (single data-point)
 
 ```json
 {
-  "modelId": "model123",
+    "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "timestamp": "2023-06-24T12:00:00Z"
 }
 ```
@@ -333,7 +355,11 @@ In these examples, we'll consider that payloads include `modelId`, `timestamp` o
 
 ```json
 {
-  "modelId": "model123",
+    "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "predictionId": "pred456"
 }
 ```
@@ -348,7 +374,11 @@ JSON Payload example:
 
 ```json
 {
-  "modelId": "model123",
+    "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "timestamps": ["2023-06-24T12:00:00Z", "2023-06-24T13:00:00Z", "2023-06-24T14:00:00Z"]
 }
 ```
@@ -400,7 +430,11 @@ JSON Payload example:
 
 ```json
 {
-  "modelId": "model123",
+    "model": {
+    "name": "test",
+    "version": "1.0.0",
+    "target": "0.0.0.0:8081"
+  },
   "predictionIds": ["pred456", "pred789", "pred012"]
 }
 ```
