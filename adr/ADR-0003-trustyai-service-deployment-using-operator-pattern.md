@@ -238,6 +238,9 @@ spec:
 and bind it to the TrustyAI Service deployment and supplied PV.
 The PVC will be created in the same namespace as the TrustyAI Service is being deployed.
 
+If multiple CRs are deployed in the same namespace, each will have its own PVC.
+The PVC and PV naming rule is respectively `${CR_NAME}-pvc` and `${CR_NAME}-pv`, where `$CR_NAME` is the name of the CR.
+
 ### Custom Image Configuration using ConfigMap
 
 If a custom image is required for the TrustyAI service (_e.g._ for development or testing), you can configure the operator to use custom images by creating a `ConfigMap` in the operator's namespace.
