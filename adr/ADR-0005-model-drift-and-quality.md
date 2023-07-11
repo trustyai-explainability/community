@@ -8,8 +8,7 @@ tags:
   - "core,java,service" # e.g. service, python, java, etc
 ---
 
-## Title
-Model Drift and Quality Metrics
+## Drift and Model Quality Metrics
 
 ## Definitions
 **Data drift**: The evolution of the distribution of inference data passing through a model over time, 
