@@ -20,25 +20,6 @@ The current design and implementation of the persistence layer only makes it pos
 
 As the `trustyai-service` aims to be used with multiple models served by different serving runtimes concurrently, the persistence layer would rather use a proper database solution for managing predictions consistently in a concurrent scenario.
 
-
-When designing a persistence layer storage for a managed service, there are several requirements that should be considered to ensure that the storage system is scalable, reliable, and performs well. Here are some key requirements that you should consider:
-
-1. Scalability: The storage system must be able to scale horizontally to handle increasing amounts of data and user traffic. This means that the system should be able to add additional servers or nodes easily to handle the load. Additionally, the system should be able to handle a high number of read and write requests per second without experiencing performance degradation.
-
-2. Availability: The storage system should be highly available and fault-tolerant to ensure that data is always accessible. This means that the system should have mechanisms in place to detect and recover from failures quickly, and that data should be replicated across multiple nodes to ensure that it is available even if one node goes down.
-
-3. Data Consistency: The storage system should ensure that data is consistent across all nodes. This means that all nodes should have the same data at all times, and that data should be synchronized in real-time across all nodes.
-
-4. Security: The storage system should have robust security features to protect data from unauthorized access, modification, or deletion. This includes mechanisms for authentication, authorization, and encryption of data at rest and in transit.
-
-5. Performance: The storage system should be optimized for performance to ensure that data can be accessed and retrieved quickly. This means that the system should have mechanisms in place to optimize read and write operations, including caching, indexing, and compression.
-
-6. Data Backup and Recovery: The storage system should have a robust backup and recovery mechanism in place to ensure that data can be restored in the event of data loss or corruption. This includes mechanisms for data backup, disaster recovery, and point-in-time recovery.
-
-7. Compliance: The storage system should be designed to comply with relevant industry and regulatory standards, such as HIPAA, PCI-DSS, and GDPR. This includes mechanisms for data retention, auditing, and access control.
-
-In summary, when designing a persistence layer storage for a managed service, it is important to consider scalability, availability, data consistency, security, performance, data backup and recovery, and compliance. By considering these requirements, you can ensure that the storage system is robust, reliable, and meets the needs of your customers.
-
 ## Goals
 
 Make the `trustyai-service` able to read and write data about predictions coming from `ModelMesh`, `Kserve`, etc. with high concurrency, low memory footprint, avoiding any data loss. 
