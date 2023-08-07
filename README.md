@@ -15,3 +15,7 @@ Meetings are held on the 3rd Wednesday of every month at 8:00 PT / 10:00 ET / 15
 
 ADRs are used to document the decision-making process for TrustyAI.  
 The creation process and past ADRs are stored in the [adr](adr) directory.
+
+## Release process
+
+A document describing the release process is available in [RELEASES.md](RELEASES.md).
