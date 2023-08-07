@@ -32,3 +32,18 @@ stateDiagram
 
 
 Releases are made via release branches with the following naming convention: `release/vMAJOR.MINOR.PATCH`. For example, the release branch for version `0.3.0` would be `release/v0.3.0` and for version `0.3.1` would be `release/v0.3.1`.
+
+## Components
+
+The release numbering scheme is applied to the following components:
+
+- [TrustyAI service](https://github.com/trustyai-explainability/trustyai-explainability/tree/main/explainability-service)
+- [TrustyAI core](https://github.com/trustyai-explainability/trustyai-explainability/tree/main/explainability-core)
+- [Python TrustyAI](https://github.com/trustyai-explainability/trustyai-explainability-python)
+- [TrustyAI operator](https://github.com/trustyai-explainability/trustyai-service-operator)
+
+TrustyAI service, TrustyAI core and Python TrustyAI are released together due to the code structure.
+
+Due to the interdependencies between the components, the versions of TrustyAI core/service/Python and the operator will be lockstepped for minor and major releases. For example, if the TrustyAI core/service/Python is released as `0.3.0`, the TrustyAI operator will also be released as `0.3.0`.
+
+This is not the case for patch releases. For example, if TrustyAI service/core/Python has a bug fix release as `0.3.1`, the TrustyAI operator will not be released as `0.3.1`. However, the default service image referenced by the operator for be updated to `quay.io/trustyai/trusty-service:0.3.1`.
