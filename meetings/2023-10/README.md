@@ -18,4 +18,4 @@
 - [TrustyAI Roadmap](https://github.com/orgs/trustyai-explainability/projects/10)
 - [TrustyAI service 0.5.1 release](https://github.com/trustyai-explainability/trustyai-explainability/releases/tag/v0.5.1)
 - [TrustyAI operator 1.10.3 release](https://github.com/trustyai-explainability/trustyai-service-operator/releases/tag/v1.10.3)
-- [Slides](2023-010-slides.pdf)
+- [Slides](2023-10-slides.pdf)
