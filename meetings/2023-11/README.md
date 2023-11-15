@@ -1,4 +1,4 @@
-# Monthly Community Meeting - October 2023
+# Monthly Community Meeting - November 2023
 
 ## Agenda
 
