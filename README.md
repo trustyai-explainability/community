@@ -6,6 +6,12 @@ TrustyAI community information.
 
 Meetings are held on the 3rd Wednesday of every month at 8:00 PT / 10:00 ET / 15:00 UTC. The meeting is held on [Google Meet](meet.google.com/pwb-trdw-tsq). The meeting agenda and notes are available in the [meetings](meetings) directory.
 
+### 2024
+
+- [January 2024](meetings/2024-01), [[slides](meetings/2024-01/2024-01-slides.pdf)]
+
+
+### 2023
 - [December 2023](meetings/2023-12), [[slides](meetings/2023-12/2023-12-slides.pdf)]
 - [November 2023](meetings/2023-11), [[slides](meetings/2023-11/2023-11-slides.pdf)]
 - [October 2023](meetings/2023-10), [[slides](meetings/2023-10/2023-10-slides.pdf)]
