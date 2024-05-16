@@ -8,6 +8,7 @@ Meetings are held on the 3rd Wednesday of every month at 8:00 PT / 10:00 ET / 15
 
 ### 2024
 
+- [May 2024](meetings/2024-05), [[slides](meetings/2024-05/2024-05-slides.pdf)]
 - [April 2024](meetings/2024-04), [[slides](meetings/2024-04/2024-04-slides.pdf)]
 - [March 2024](meetings/2024-03), [[slides](meetings/2024-03/2024-03-slides.pdf)]
 - [February 2024](meetings/2024-02), [[slides](meetings/2024-02/2024-02-slides.pdf)]
