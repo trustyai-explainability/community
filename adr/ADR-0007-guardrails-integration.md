@@ -1,5 +1,5 @@
 ---
-num: 3 # allocate an id when the draft is created
+num: 7 # allocate an id when the draft is created
 title: TrustyAI integration with Guardrails
 status: "Draft" # One of Draft, Accepted, Rejected
 authors:
