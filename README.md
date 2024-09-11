@@ -30,6 +30,7 @@ Meetings are held on the 3rd Wednesday of every month at 8:00 PT / 10:00 ET / 15
 
 ## Presentations
 
+- September 2024, _LM-Eval and Guardrails_, Kubeflow community meeting [[slides](presentations/2024-09-kubeflow-lm-eval-guardrails.pdf)]
 - July 2024, _TrustyAI Introduction_, Kubeflow community meeting [[slides](presentations/2024-07-kubeflow-community-meeting.pdf)]
 
 ## Architecture Decision Records (ADRs)
