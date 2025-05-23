@@ -365,25 +365,27 @@ If this workflow is not implemented:
 
    ```mermaid
    sequenceDiagram
+       participant Dev as Developer 👤
        participant PR as Pull Request
-       participant GH as GitHub Actions
+       participant GH as GitHub Actions 🤖
        participant Quay as Quay.io Registry
        participant Op as Operator Repo
        participant K8s as Test Cluster
        participant Tests as E2E Tests
 
-       PR->>GH: Create/Update PR for component X
-       GH->>GH: Checkout PR code
-       GH->>Quay: Build & push image for component X
+       Dev->>PR: 👤 Create/Update PR for component X
+       GH->>GH: 🤖 Checkout PR code
+       GH->>Quay: 🤖 Build & push image for component X
        Note right of Quay: quay.io/trustyai/X:PR-123
-       GH->>Op: Checkout operator repo
-       GH->>Op: Update params.env for component X only
+       GH->>Op: 🤖 Checkout operator repo
+       GH->>Op: 🤖 Update params.env for component X only
        Note right of Op: Other components stay on :latest
-       GH->>K8s: Deploy operator with updated params
-       GH->>K8s: Deploy all components
-       GH->>Tests: Run E2E tests
-       Tests->>GH: Report results
-       GH->>PR: Update status
+       GH->>K8s: 🤖 Deploy operator with updated params
+       GH->>K8s: 🤖 Deploy all components
+       GH->>Tests: 🤖 Run E2E tests
+       Tests->>GH: 🤖 Report results
+       GH->>PR: 🤖 Update status
+       Dev->>PR: 👤 Review results and merge if tests pass
    ```
 
    **Concrete Example: Orchestrator PR Testing**
@@ -424,20 +426,23 @@ If this workflow is not implemented:
    ```mermaid
    sequenceDiagram
        participant U as Upstream:main
-       participant GH as GitHub Actions
+       participant GH as GitHub Actions 🤖
        participant M as Midstream:main
        participant N as Notifications
+       participant Team as Team Members 👤
 
-       Note over GH: Daily trigger
-       GH->>M: Checkout midstream
-       GH->>GH: Add upstream remote
-       GH->>U: Fetch changes
-       GH->>GH: Merge upstream/main
-       GH->>GH: Run validation tests
-       GH->>M: Push changes
+       Note over GH: 🤖 Daily trigger
+       GH->>M: 🤖 Checkout midstream
+       GH->>GH: 🤖 Add upstream remote
+       GH->>U: 🤖 Fetch changes
+       GH->>GH: 🤖 Merge upstream/main
+       GH->>GH: 🤖 Run validation tests
+       GH->>M: 🤖 Push changes
 
        alt Sync Failed
-           GH->>N: Create issue for team
+           GH->>N: 🤖 Create issue for team
+           N->>Team: 👤 Team reviews sync failure
+           Team->>M: 👤 Manual intervention if needed
        end
    ```
 
@@ -453,18 +458,22 @@ If this workflow is not implemented:
 
    ```mermaid
    sequenceDiagram
-       participant U as User
-       participant GH as GitHub Actions
+       participant U as User 👤
+       participant GH as GitHub Actions 🤖
        participant I as Midstream:incubation
        participant R as Midstream:odh/x.y
        participant B as Image Build
+       participant Q as Quay.io Registry
 
-       U->>GH: Manual trigger with version
-       GH->>I: Checkout incubation
-       GH->>R: Create branch odh/x.y
-       GH->>R: Create tag v*-odh
-       GH->>B: Trigger image build workflow
-       B->>B: Build and push images
+       U->>GH: 👤 Manual trigger with version
+       GH->>I: 🤖 Checkout incubation
+       GH->>R: 🤖 Create branch odh/x.y
+       GH->>R: 🤖 Create tag v*-odh
+       GH->>B: 🤖 Trigger image build workflow
+       B->>B: 🤖 Build component images
+       B->>Q: 🤖 Push versioned images to registry
+       GH->>U: 🤖 Notify release completion
+       U->>U: 👤 Verify release artifacts
    ```
 
 4. **Midstream Stable to Downstream Sync**:
