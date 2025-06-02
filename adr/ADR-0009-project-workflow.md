@@ -76,9 +76,9 @@ We will implement a streamlined Git workflow with the following structure:
 The project components will follow these release cadences:
 - **Upstream**: Releases every 3 weeks
 - **Midstream (ODH)**: Releases every 3 weeks, coinciding with upstream releases
-- **Downstream**: Monthly releases
+- **Downstream**: Release schedule determined by downstream teams (typically monthly, but not fixed)
 
-This schedule allows upstream features to be developed, tested in ODH, and then propagated to downstream after a period of incubation.
+This schedule allows upstream features to be developed, tested in ODH, and then propagated to downstream after a period of incubation. Downstream teams maintain flexibility in their release timing to accommodate their specific requirements and validation processes.
 
 ### Branch Flow
 
@@ -94,7 +94,7 @@ flowchart TD
     MT --> |automated build| MOI[midstream:v*-odh]
     MI --> |cherry-pick approved features| MS[midstream:stable]
     MS --> |automated sync| DB[downstream:main]
-    DB --> |monthly release| DR[downstream:release-x]
+    DB --> |downstream release| DR[downstream:release-x]
     DR --> |tag| DT[v*]
 
     subgraph "Docker Image Updates"
