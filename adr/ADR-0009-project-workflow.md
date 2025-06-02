@@ -623,3 +623,39 @@ This diagram shows:
 6. Selective cherry-picking of validated features from incubation to stable
 7. Automated sync from **midstream:stable** to **downstream:main**
 8. Downstream release processes with customisations
+
+## Timing Synchronisation Concerns
+
+A timing issue has been identified in the proposed workflow:
+
+**Problem**: Due to different release cycles (ODH releases every 3 weeks vs downstream releases monthly-ish), there's a risk that a commit/feature could be promoted to ODH stable (and thus downstream) before it has been properly validated through the incubation process.
+
+**Scenario**:
+1. Feature X is added to `midstream:incubation` on Day 1
+2. Feature X is cherry-picked to `midstream:stable` on Day 10 (bypassing proper incubation)
+3. ODH release branch `odh/2.20` is cut on Day 15, missing Feature X in ODH validation
+4. Downstream syncs from `midstream:stable` on Day 20, getting Feature X
+5. Feature X reaches downstream without proper ODH incubation
+
+This goes against the principle that features should incubate on ODH before reaching downstream.
+
+## Solution: Incubation Verification for Cherry-Picks
+
+To address this concern, we propose a simple validation process:
+
+### Core Principle
+**Commits can only be cherry-picked to `midstream:stable` if they already exist in the `midstream:incubation` branch.**
+
+### Implementation
+A GitHub Actions workflow validates that any cherry-pick to stable has already been incubated:
+
+1. **Extract commits** being added to stable in the PR
+2. **Verify incubation** - check each commit exists in the `incubation` branch using `git merge-base --is-ancestor`
+3. **Block invalid PRs** - fail the check if any commit is not found in incubation
+4. **Owner override** - repository owners can bypass validation for critical security fixes using PR labels or special commit message prefixes
+
+### Benefits
+- Ensures proper flow: upstream → main → incubation → stable → downstream
+- Uses Git's commit ancestry checking (no external tracking needed)
+- Maintains flexibility for critical situations
+- Simple to implement and maintain
