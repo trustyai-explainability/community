@@ -52,6 +52,7 @@ The current development process presents several challenges:
 - Maintaining multiple parallel long-term feature branches
 - Fully automating all aspects of the development workflow without human oversight
 - Developing or experimenting with features in midstream (ODH) repositories
+- Setting up Konflux for ODH release creation
 
 ## Current situation
 
@@ -455,6 +456,7 @@ If this workflow is not implemented:
     - Creates a new branch named `odh/[version]`
     - Tags the branch with `v[version]-odh`
     - Triggers image builds for the release
+    - **Note**: When using Konflux, additional setup (Tekton pipelines, build definitions, etc.) will be handled by the midstream's devops team
 
    ```mermaid
    sequenceDiagram
