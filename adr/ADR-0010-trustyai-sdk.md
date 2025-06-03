@@ -63,7 +63,7 @@ TrustyAI currently lacks a unified, consistent API across its various services a
 Additionally, TrustyAI's core algorithms are currently built on Java, which creates several challenges:
 
 - **Contribution barriers**: The Java-based core limits contributions from the broader AI/ML community, which predominantly works in Python
-- **Language bridging complexity**: Integrating Python-based workflows with Java core algorithms requires complex bridging mechanisms and introduces additional maintenance overhead
+- **Language bridging complexity**: Integrating Python-based workflows with Java core algorithms requires complex bridging mechanisms and introduces considerable maintenance overhead
 - **Third-party library limitations**: The Java ecosystem has fewer specialised AI safety and ML libraries compared to Python, making it difficult to leverage community innovations in, for instance, explainability, bias detection, and evaluation frameworks
 
 **Migration Strategy**: The new Python-based TrustyAI service will replace the existing Java service. The TrustyAI SDK serves as the core library that the service builds upon, providing a clear separation between the reusable components (SDK) and the deployment-specific service layer.
@@ -72,7 +72,7 @@ Additionally, TrustyAI's core algorithms are currently built on Java, which crea
 
 - Establish a consistent interface across all TrustyAI services and components
 - Simplify integration for developers by providing a unified access pattern
-- Structure capabilities into logical "scopes" of AI safety (explainability, evaluation, guardrails, etc.)
+- Structure capabilities into logical "scopes" of AI safety (explainability, evaluation, guardrails, _etc._)
 - Enable extensibility for future capabilities without breaking changes
 - Improve developer experience and reduce onboarding time
 - Enable consistent error handling and logging
@@ -407,13 +407,16 @@ class BaseProvider(ABC):
 
 ```python
 from trustyai.providers import EvaluationProvider, ExplainabilityProvider
+from trustyai.datasets import DatasetFactory
 
 # Evaluation with local execution
 eval_provider = EvaluationProvider(
     implementation="lm-evaluation-harness",
     execution_mode="local"
 )
-eval_result = eval_provider.evaluate(model, tasks, parameters)
+
+# LM-Eval uses built-in datasets for benchmarking tasks
+eval_result = eval_provider.evaluate(model, tasks, parameters=parameters)
 
 # Explainability with external API (configured within local execution)
 explain_provider = ExplainabilityProvider(
@@ -424,7 +427,10 @@ explain_provider = ExplainabilityProvider(
         "api_key": "your-api-key"
     }
 )
-explanation = explain_provider.explain(model, input_data)
+
+# Create dataset for explainability
+explain_dataset = DatasetFactory.create_dataset("s3://my-bucket/model-data.parquet")
+explanation = explain_provider.explain(model, dataset=explain_dataset)
 
 # All providers support the same configuration patterns
 providers = [eval_provider, explain_provider]
@@ -712,12 +718,12 @@ class DatasetFactory:
 **Integration with Providers:**
 
 ```python
-# Update existing provider models to use Dataset abstraction
+
 class EvaluationRequest(TrustyAIRequest):
     """Request model for evaluation operations."""
     model: ModelReference
     tasks: List[str] = Field(description="Evaluation tasks to run")
-    dataset: Optional[Union[DatasetReference, BaseDataset]] = None
+    dataset: Optional[BaseDataset] = None
     parameters: Dict[str, Any] = Field(default_factory=dict)
 
     class Config:
@@ -733,7 +739,7 @@ class EvaluationRequest(TrustyAIRequest):
                     "provider": "ragas",
                     "model": {"identifier": "openai/gpt-4", "type": "api"},
                     "tasks": ["faithfulness", "answer_relevancy"],
-                    "dataset": {"identifier": "s3://my-bucket/rag-data.parquet", "type": "s3", "format": "parquet"},
+                    "dataset": FileDataset('s3://my-bucket/rag-data.parquet'),
                     "parameters": {"embeddings_model": "openai/text-embedding-ada-002"}
                 }
             ]
@@ -786,14 +792,13 @@ hf_dataset = DatasetFactory.create_dataset("squad", split="validation")
 # Use with evaluation provider
 eval_provider = EvaluationProvider(implementation="lm-evaluation-harness")
 
-# Evaluate with custom dataset
+# LM-Eval uses built-in datasets for standard benchmarking tasks
 results = eval_provider.evaluate(
     model="hf/microsoft/DialoGPT-medium",
-    tasks=["question_answering"],
-    dataset=file_dataset
+    tasks=["hellaswag", "arc_easy"]
 )
 
-# RAGAS evaluation with dataset
+# RAGAS evaluation with dataset - RAGAS needs external data
 ragas_provider = EvaluationProvider(implementation="ragas")
 rag_results = ragas_provider.evaluate(
     model="openai/gpt-4",
@@ -821,17 +826,17 @@ trustyai dataset sample "postgresql://user:pass@localhost/db" --query "SELECT * 
 trustyai dataset convert "data/input.csv" --output "s3://my-bucket/converted.parquet" --format parquet
 trustyai dataset preview "hf://squad" --split validation --limit 5
 
-# Using datasets with evaluation
-trustyai eval run \
+# LM-Eval uses built-in datasets for benchmarking tasks
+trustyai eval execute \
     --provider lm-evaluation-harness \
+    --execution-mode local \
     --model "hf/microsoft/DialoGPT-medium" \
-    --tasks "question_answering" \
-    --dataset "data/custom_qa.csv" \
-    --dataset-columns "question,answer"
+    --tasks "hellaswag,arc_easy"
 
-# Using datasets with RAGAS evaluation
-trustyai eval run \
+# RAGAS evaluation requires external datasets
+trustyai eval execute \
     --provider ragas \
+    --execution-mode local \
     --model "openai/gpt-4" \
     --tasks "faithfulness,answer_relevancy" \
     --dataset "s3://my-bucket/rag-evaluation.parquet" \
@@ -1053,11 +1058,15 @@ class RAGASArgs(EvaluationCommonArgs):
 
 ```python
 from trustyai.providers import EvaluationProvider
+from trustyai.datasets import DatasetFactory
 
 # Common evaluation parameters
 model_spec = "hf/microsoft/DialoGPT-medium"
 tasks = ["hellaswag", "arc_easy"]
 eval_params = {"batch_size": 8, "limit": 100}
+
+# Create evaluation dataset
+eval_dataset = DatasetFactory.create_dataset("data/custom_evaluation.csv")
 
 # 1. Local execution - runs lm-eval directly on current machine
 local_provider = EvaluationProvider(
@@ -1106,6 +1115,7 @@ api_provider = EvaluationProvider(
 result_api = api_provider.evaluate(
     model=model_spec,
     tasks=tasks,
+    dataset=eval_dataset,
     parameters=eval_params
 )
 
@@ -1117,11 +1127,14 @@ ragas_provider = EvaluationProvider(
     execution_mode="local"
 )
 
+# Create RAG evaluation dataset - RAGAS needs external datasets
+rag_dataset = DatasetFactory.create_dataset("data/rag_evaluation.json")
+
 rag_result = ragas_provider.evaluate(
     model="openai/gpt-4",
     tasks=["faithfulness", "answer_relevancy", "context_precision"],
+    dataset=rag_dataset,
     parameters={
-        "dataset": "rag_dataset.json",
         "embeddings_model": "openai/text-embedding-ada-002"
     }
 )
@@ -1292,7 +1305,7 @@ class EvaluationRequest(TrustyAIRequest):
     """Request model for evaluation operations."""
     model: ModelReference
     tasks: List[str] = Field(description="Evaluation tasks to run")
-    dataset: Optional[DatasetReference] = None
+    dataset: Optional[BaseDataset] = None
     parameters: Dict[str, Any] = Field(default_factory=dict)
 
     class Config:
@@ -1336,7 +1349,7 @@ class EvaluationResponse(TrustyAIResponse):
 class ExplainabilityRequest(TrustyAIRequest):
     """Request model for explainability operations."""
     model: ModelReference
-    input_data: Dict[str, Any] = Field(description="Input data to explain")
+    dataset: BaseDataset = Field(description="Dataset containing input data to explain")
     explanation_type: str = Field(description="Type of explanation (feature_importance, counterfactual, etc.)")
     parameters: Dict[str, Any] = Field(default_factory=dict)
 
@@ -1360,7 +1373,7 @@ class ExplanationResult(BaseModel):
 class ExplainabilityResponse(TrustyAIResponse):
     """Response model for explainability operations."""
     model: ModelReference
-    input_data: Dict[str, Any]
+    dataset: BaseDataset
     explanations: List[ExplanationResult] = Field(default_factory=list)
 ```
 
@@ -1370,7 +1383,7 @@ class ExplainabilityResponse(TrustyAIResponse):
 class BiasDetectionRequest(TrustyAIRequest):
     """Request model for bias detection operations."""
     model: ModelReference
-    dataset: DatasetReference
+    dataset: BaseDataset
     protected_attributes: List[str] = Field(description="Attributes to check for bias")
     fairness_metrics: List[str] = Field(description="Fairness metrics to calculate")
     parameters: Dict[str, Any] = Field(default_factory=dict)
@@ -1387,7 +1400,7 @@ class BiasMetric(BaseModel):
 class BiasDetectionResponse(TrustyAIResponse):
     """Response model for bias detection operations."""
     model: ModelReference
-    dataset: DatasetReference
+    dataset: BaseDataset
     protected_attributes: List[str]
     bias_metrics: List[BiasMetric] = Field(default_factory=list)
     overall_fairness_score: Optional[float] = None
@@ -1847,13 +1860,18 @@ The same provider architecture pattern could extend to other AI safety domains. 
 **Universal API:**
 ```python
 from trustyai.providers import RedTeamProvider
+from trustyai.datasets import DatasetFactory
 
 # Same API regardless of implementation
 redteam_provider = RedTeamProvider(implementation="garak")
+
+# Create dataset for red team testing
+safety_dataset = DatasetFactory.create_dataset("data/safety_prompts.json")
+
 result = redteam_provider.test(
     model="model_name",
     attacks=["injection", "jailbreak"],
-    dataset="safety_prompts.json"
+    dataset=safety_dataset
 )
 ```
 
@@ -1873,10 +1891,10 @@ result = redteam_provider.test(
 **CLI Usage Example:**
 ```bash
 # Local red team testing
-trustyai redteam run --provider garak --model "local_llm" --attacks "injection,jailbreak" --dataset "safety_prompts.json"
+trustyai redteam execute --provider garak --execution-mode local --model "local_llm" --attacks "injection,jailbreak" --dataset "data/safety_prompts.json"
 
 # Kubernetes deployment for complete testing
-trustyai redteam deploy --provider garak --model "api://production-model" --attacks "adversarial_suite" --namespace security --timeout 24h
+trustyai redteam execute --provider garak --execution-mode kubernetes --model "api://production-model" --attacks "adversarial_suite" --dataset "s3://security-datasets/comprehensive-tests.parquet" --namespace security --timeout 24h
 ```
 
 This shows how the provider architecture naturally extends across different AI safety domains, maintaining consistency while supporting domain-specific requirements.
@@ -1887,14 +1905,17 @@ The TrustyAI SDK enables multiple usage patterns across different target environ
 
 **CLI Usage:**
 ```bash
-# Local execution using 'run' command
-trustyai eval run --provider lm-evaluation-harness --model "hf/microsoft/DialoGPT-medium" --tasks "hellaswag,arc" --limit 10
+# Local execution using 'execute' command - LM-Eval uses built-in datasets
+trustyai eval execute --provider lm-evaluation-harness --execution-mode local --model "hf/microsoft/DialoGPT-medium" --tasks "hellaswag,arc" --limit 10
 
-# Kubernetes execution using 'deploy' command
-trustyai eval deploy --provider lm-evaluation-harness --model "hf/microsoft/DialoGPT-medium" --tasks "hellaswag,arc" --limit 10 --namespace trustyai-eval
+# Kubernetes execution using 'execute' command - LM-Eval uses built-in datasets
+trustyai eval execute --provider lm-evaluation-harness --execution-mode kubernetes --model "hf/microsoft/DialoGPT-medium" --tasks "hellaswag,arc" --limit 10 --namespace trustyai-eval
 
 # Validation-only mode
-trustyai eval run --dry-run --provider lm-evaluation-harness --model "hf/model"
+trustyai eval execute --dry-run --provider lm-evaluation-harness --execution-mode local --model "hf/model"
+
+# RAGAS evaluation with external dataset
+trustyai eval execute --provider ragas --execution-mode local --model "openai/gpt-4" --tasks "faithfulness,answer_relevancy" --dataset "data/rag_evaluation.json"
 ```
 
 **REST Service Usage:**
@@ -1905,20 +1926,20 @@ docker-compose up trustyai-service
 # Or deploy to Kubernetes
 kubectl apply -f kubernetes/deployment.yaml
 
-# Use REST endpoints for evaluation
+# Use REST endpoints for evaluation with dataset
 curl -X POST "http://localhost:8000/api/v1/evaluation/run" \
   -H "Content-Type: application/json" \
   -d '{
     "provider": "lm-evaluation-harness",
     "model": "hf/microsoft/DialoGPT-medium",
     "tasks": ["hellaswag", "arc"],
-    "execution_mode": "kubernetes"
+    "execution_mode": "kubernetes",
   }'
 
 # Monitor job status
 curl "http://localhost:8000/api/v1/evaluation/jobs/{job_id}"
 
-# Use explainability endpoints
+# Use explainability endpoints with dataset
 curl -X POST "http://localhost:8000/api/v1/explainability/explain" \
   -H "Content-Type: application/json" \
   -d '{
@@ -1933,6 +1954,11 @@ curl -X POST "http://localhost:8000/api/v1/explainability/explain" \
 # Direct usage in applications
 import trustyai
 from trustyai.providers import EvaluationProvider, ExplainabilityProvider
+from trustyai.datasets import DatasetFactory
+
+# Create datasets
+eval_dataset = DatasetFactory.create_dataset("data/evaluation_data.csv")
+explain_dataset = DatasetFactory.create_dataset("s3://model-data/inputs.parquet")
 
 # Local evaluation
 eval_provider = EvaluationProvider(implementation="lm-evaluation-harness")
@@ -1960,6 +1986,7 @@ results = k8s_eval_provider.evaluate(
 from fastapi import FastAPI
 import trustyai
 from trustyai.providers import EvaluationProvider
+from trustyai.datasets import DatasetFactory
 
 app = FastAPI()
 
@@ -1967,9 +1994,14 @@ app = FastAPI()
 async def custom_evaluation(request: EvalRequest):
     # Service uses SDK internally
     provider = EvaluationProvider(implementation=request.provider)
+
+    # Create dataset from request
+    dataset = DatasetFactory.create_dataset(request.dataset_uri)
+
     result = provider.evaluate(
         model=request.model,
-        tasks=request.tasks
+        tasks=request.tasks,
+        dataset=dataset
     )
     return {"evaluation_result": result}
 ```
@@ -1979,18 +2011,20 @@ async def custom_evaluation(request: EvalRequest):
 # Interactive data science workflows
 import trustyai
 import pandas as pd
+from trustyai.datasets import DatasetFactory
 
-# Load data and configure provider in notebook environment
-data = pd.read_csv('dataset.csv')
+# Load data using Dataset abstraction
+dataset = DatasetFactory.create_dataset('dataset.csv')
 eval_provider = trustyai.providers.EvaluationProvider(implementation="lm-evaluation-harness")
 
 # Interactive evaluation with rich outputs
-results = eval_provider.evaluate(model, data)
+results = eval_provider.evaluate(model, tasks, parameters)
 results.plot()  # Built-in visualisation support
 
 # Explain model decisions interactively
 explainer = trustyai.providers.ExplainabilityProvider(implementation="shap")
-explanation = explainer.explain(model, sample_data)
+sample_dataset = DatasetFactory.create_dataset('sample_data.parquet')
+explanation = explainer.explain(model, dataset=sample_dataset)
 explanation.visualise()
 ```
 
