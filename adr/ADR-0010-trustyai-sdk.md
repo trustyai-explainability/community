@@ -586,6 +586,9 @@ class BaseDataset(ABC):
 
 **Dataset Implementations:**
 
+**Note on Kubernetes PVC Support:** A separate PVC dataset type is not needed since `FileDataset` transparently handles PVC storage. 
+When running in Kubernetes, `FileDataset` continues to use standard file operations on the mounted storage. This keeps local and Kubernetes `FileDataset` consistent.
+
 The Dataset abstraction supports multiple data source types through specific implementations:
 
 ```python
