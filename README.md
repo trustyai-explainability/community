@@ -8,6 +8,8 @@ Meetings are held on the 3rd Wednesday of every month at 8:00 PT / 10:00 ET / 15
 
 ### 2025
 
+- [May 2025](meetings/2025-05), [[slides](meetings/2025-05/2025-05-slides.pdf)]
+- [April 2025](meetings/2025-04), [[slides](meetings/2025-04/2025-04-slides.pdf)]
 - [March 2025](meetings/2025-03), [[slides](meetings/2025-03/2025-03-slides.pdf)]
 - [February 2025](meetings/2025-02), [[slides](meetings/2025-02/2025-02-slides.pdf)]
 - [January 2025](meetings/2025-01), [[slides](meetings/2025-01/2025-01-slides.pdf)]
